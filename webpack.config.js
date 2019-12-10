@@ -6,7 +6,7 @@ const outputPath = __dirname+'/dist/'+packageInfo.version
 module.exports = {
     mode:'development',
     entry:{
-        'WeChat':'./src/wechat.js',
+        'WeChatShare':'./src/index.js',
     },
     output:{
         path:outputPath,

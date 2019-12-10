@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div>微信分享示例</div>
+        <script src="https://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+        <script src="../dist/1.0.0/WeChatShare.min.js"></script>
+        <script>
+        var wechatshare = new WeChatShare({
+            title:'',
+            desc:'',
+            link:'',
+            imgUrl:'',
+            appid:'wx1b2921778647e6c5',
+            secret:'a34e730514833bbdc7151d5d47d7e213'
+        })
+        wechatshare.auth()
+        </script>
+        
+    </body>
+</html>
