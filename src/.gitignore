@@ -1,0 +1,6 @@
+#忽略文件夹 .idea
+
+.idea/
+.tmp/
+/node_modules
+package-lock.json
