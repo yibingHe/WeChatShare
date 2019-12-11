@@ -9,7 +9,7 @@
 
 1. 页面引入sdk <script src="https://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script> 必须是1.4.0版本
 2. 文件中引入该js
-3. 按需要参数实例化wechat new wechat({title:'',desc:'',imgUrl:'',link:''})
+3. 按需要参数实例化var wechat = new WeChatShare({title:'',desc:'',imgUrl:'',link:''})
 4. 页面授权 wechat.auth()
 5. 配置接口代理 /wechat
 ```
