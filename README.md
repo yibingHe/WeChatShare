@@ -31,4 +31,16 @@ option:{
   link:'',
   imgUrl:''
 }
+```
+demo:
+var wechatshare = new WeChatShare({
+            title:'微信分享',
+            desc:'微信分享介绍',
+            link:'',
+            imgUrl:'',
+            appid:'',
+            secret:''
+        })
+        wechatshare.auth()
+```
 
