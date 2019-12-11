@@ -14,9 +14,7 @@ class WeChatShare {
     this.__setOption__(option)
   }
 
-
   auth() {
-    this.__setWXReady__()
     this.__fetchWechatToken__()
   }
 
@@ -35,7 +33,7 @@ class WeChatShare {
     httpRequest.open('GET', '/wechat/cgi-bin/token?grant_type=client_credential' + '&appid=' + this.option.appid + '&secret=' + this.option.secret, true);
     httpRequest.onreadystatechange = () => {
       if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
-        let json = httpRequest.responseText;//获取到服务端返回的数据
+        let json = JSON.parse(httpRequest.responseText);//获取到服务端返回的数据
         this.access_token = json.access_token;
         this.__fetchTicket__(json.access_token);
       }
@@ -49,7 +47,7 @@ class WeChatShare {
     httpRequest.open('GET', '/wechat/cgi-bin/ticket/getticket?type=jsapi' + '&access_token=' + token, true);
     httpRequest.onreadystatechange = () => {
       if (httpRequest.readyState == 4 && httpRequest.status == 200) {
-        let json = httpRequest.responseText;
+        let json = JSON.parse(httpRequest.responseText);
         let timestamp = new Date().getTime();
         let noncestr = this.randomString(16);
         this.jsapi_ticket = json.ticket;
@@ -58,7 +56,7 @@ class WeChatShare {
 
         /*global wx*/
         wx.config({
-          debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+          debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
           appId: this.option.appid, // 必填，公众号的唯一标识
           timestamp: timestamp, // 必填，生成签名的时间戳
           nonceStr: noncestr, // 必填，生成签名的随机串
@@ -72,9 +70,12 @@ class WeChatShare {
             "hideMenuItems",
             "showMenuItems",
             "onMenuShareTimeline",
-            "onMenuShareAppMessage"
+            "onMenuShareAppMessage",
+            "updateTimelineShareData"
           ]
         })
+
+        this.__setWXReady__()
       }
     }
     httpRequest.send()
@@ -82,8 +83,30 @@ class WeChatShare {
 
   __setWXReady__() {
     wx.ready(() => {
+      
+      //1.4.0
+      wx.updateAppMessageShareData({ 
+        title: this.option.title, // 分享标题
+        desc: this.option.desc, // 分享描述
+        link: this.option.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: this.option.imgUrl, // 分享图标
+        success: function () {
+          // 设置成功
+        }
+      })
+
+      wx.updateTimelineShareData({ 
+        title: this.option.title, // 分享标题
+        link: this.option.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: this.option.imgUrl, // 分享图标
+        success: function () {
+          // 设置成功
+        }
+      })
+
+      //1.2.0
       // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-      wx.onMenuShareAppMessage({
+     /*  wx.onMenuShareAppMessage({
         title: this.option.title, // 分享标题
         desc: this.option.desc,
         link: encodeURIComponent(this.option.link), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -101,7 +124,8 @@ class WeChatShare {
         type: "link",
         success: () => { },
         error: () => { }
-      });
+      }); */
+
     });
   }
 
